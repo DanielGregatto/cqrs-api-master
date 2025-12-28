@@ -13,6 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Remove="appsettings.Development.json" />
 		<Content Remove="appsettings.Production.json" />
 	</ItemGroup>
 
@@ -47,6 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Include="appsettings.Development.json" />
 		<None Include="appsettings.Production.json">
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</None>

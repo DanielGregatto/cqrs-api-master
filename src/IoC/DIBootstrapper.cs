@@ -51,9 +51,8 @@ namespace IoC
             // ============================================================================
             // DATABASE CONTEXT & UNIT OF WORK
             // ============================================================================
-            // Configure Entity Framework Core with SQL Server
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            // Configure Entity Framework Core (connection string configured in AppDbContext.OnConfiguring)
+            services.AddDbContext<AppDbContext>();
 
             // Register Unit of Work pattern for transaction management
             services.AddScoped<IUnitOfWork, Data.UnitOfWork.UnitOfWork>();

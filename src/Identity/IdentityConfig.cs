@@ -43,11 +43,8 @@ namespace Identity
             // ============================================================================
             // IDENTITY DATABASE CONTEXT
             // ============================================================================
-            // Configure separate DbContext for Identity tables (AspNetUsers, AspNetRoles, etc.)
-            services.AddDbContext<AppIdentityDbContext>((sp, options) =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
+            // Configure separate DbContext for Identity tables (connection string configured in AppIdentityDbContext.OnConfiguring)
+            services.AddDbContext<AppIdentityDbContext>();
 
             // ============================================================================
             // ASP.NET CORE IDENTITY
