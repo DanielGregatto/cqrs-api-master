@@ -2,7 +2,7 @@
 
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/DanielGregatto/cqrs-api-master/pulls)
 
 A production-ready **CQRS (Command Query Responsibility Segregation)** API boilerplate built with **ASP.NET Core 8.0**, featuring a complete Identity layer, JWT authentication, social logins, and clean architecture. Perfect starting point for building scalable, maintainable APIs.
 
@@ -125,7 +125,7 @@ All operations return a `Result<T>` object for consistent error handling.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/cqrs-api-boilerplate.git
+   git clone https://github.com/DanielGregatto/cqrs-api-master.git
    cd cqrs-api-boilerplate
    ```
 
@@ -388,7 +388,7 @@ dotnet test --verbosity normal
 ### 1. Clone and Rename
 
 ```bash
-git clone https://github.com/yourusername/cqrs-api-boilerplate.git my-new-api
+git clone https://github.com/DanielGregatto/cqrs-api-master.git my-new-api
 cd my-new-api
 rm -rf .git
 git init
