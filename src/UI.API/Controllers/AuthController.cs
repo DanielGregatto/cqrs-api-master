@@ -22,7 +22,6 @@ using UI.API.Controllers.Base;
 
 namespace UI.API.Controllers
 {
-    [Route("api/[controller]")]
     public class AuthController : CoreController
     {
         private readonly IMediatorHandler _mediator;

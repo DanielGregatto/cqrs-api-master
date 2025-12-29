@@ -9,6 +9,7 @@ namespace UI.API.Controllers.Base
     /// Base controller for CQRS-based endpoints using Result pattern
     /// </summary>
     [ApiController]
+    [Route("api/")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ErrorResponseDto), 400)]
     [ProducesResponseType(typeof(ErrorResponseDto), 409)]

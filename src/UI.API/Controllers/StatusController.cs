@@ -15,7 +15,6 @@ using UI.API.Controllers.Base;
 
 namespace UI.API.Controllers
 {
-    [Route("api/[controller]")]
     public class StatusController : CoreController
     {
         private readonly IMediatorHandler _mediator;
@@ -38,7 +37,7 @@ namespace UI.API.Controllers
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with an <see
         /// cref="IEnumerable{T}"/> of <see cref="StatusDto"/> objects if successful; otherwise, an <see
         /// cref="ErrorResponseDto"/> describing the error.</returns>
-        [HttpGet]
+        [HttpGet("v1/status")]
         [ProducesResponseType(typeof(SuccessResponse<IEnumerable<StatusDto>>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
@@ -59,7 +58,7 @@ namespace UI.API.Controllers
         /// <param name="id">The unique identifier of the status to retrieve.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the status data if found; 
         /// otherwise, an <see cref="ErrorResponseDto"/> indicating the reason for failure.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("v1/status/{id}")]
         [ProducesResponseType(typeof(SuccessResponse<StatusDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
@@ -87,12 +86,12 @@ namespace UI.API.Controllers
         /// caller must have appropriate authorization to access this resource.</remarks>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{Guid}"/> with the active status
         /// identifier if successful;  otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
-        [HttpGet("ativo")]
+        [HttpGet("v1/status/active")]
         [ProducesResponseType(typeof(SuccessResponse<Guid>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
-        public async Task<IActionResult> GetIdStatusAtivo()
+        public async Task<IActionResult> GetIdActiveStatus()
         {
             var query = new GetIdStatusAtivoQuery();
             var result = await _mediator.SendCommand(query);
@@ -107,7 +106,7 @@ namespace UI.API.Controllers
         /// have appropriate authorization to access this resource.</remarks>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{Guid}"/> with the identifier of the
         /// "Inativo" status if successful; otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
-        [HttpGet("inativo")]
+        [HttpGet("v1/status/inactive")]
         [ProducesResponseType(typeof(SuccessResponse<Guid>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
@@ -132,7 +131,7 @@ namespace UI.API.Controllers
         /// ascending order.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with a paginated list of <see
         /// cref="StatusDto"/> objects if successful; otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
-        [HttpGet("search")]
+        [HttpGet("v1/status/search")]
         [ProducesResponseType(typeof(SuccessResponse<PaginatedResponseDto<StatusDto>>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
@@ -163,7 +162,7 @@ namespace UI.API.Controllers
         /// not be <c>null</c>.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the created status data if
         /// successful, or an <see cref="ErrorResponseDto"/> with error details if the operation fails.</returns>
-        [HttpPost]
+        [HttpPost("v1/status")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<StatusDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -195,7 +194,7 @@ namespace UI.API.Controllers
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. The task result contains an <see
         /// cref="IActionResult"/> that returns a <see cref="SuccessResponse{StatusDto}"/> with the updated status if
         /// successful; otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
-        [HttpPut("{id}")]
+        [HttpPut("v1/status/{id}")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<StatusDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -216,7 +215,7 @@ namespace UI.API.Controllers
         /// <param name="id">The unique identifier of the status to delete.</param>
         /// <returns>An <see cref="IActionResult"/> that indicates the result of the delete operation. Returns status code 200 if
         /// the deletion is successful; otherwise, returns an error response with the appropriate status code.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("v1/status/{id}")]
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]

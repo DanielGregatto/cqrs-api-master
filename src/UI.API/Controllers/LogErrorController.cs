@@ -14,7 +14,6 @@ using UI.API.Controllers.Base;
 
 namespace UI.API.Controllers
 {
-    [Route("api/[controller]")]
     public class LogErrorController : CoreController
     {
         private readonly IMediatorHandler _mediator;
@@ -35,7 +34,7 @@ namespace UI.API.Controllers
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with an <see
         /// cref="IEnumerable{T}"/> of <see cref="LogErrorDto"/> objects if successful; otherwise, an <see
         /// cref="ErrorResponseDto"/> describing the error.</returns>
-        [HttpGet]
+        [HttpGet("v1/log-error")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<IEnumerable<LogErrorDto>>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -57,7 +56,7 @@ namespace UI.API.Controllers
         /// <param name="id">The unique identifier of the log error entry to retrieve.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the <see
         /// cref="LogErrorDto"/> if found; otherwise, an <see cref="ErrorResponseDto"/> indicating the error.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("v1/log-error/{id}")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<LogErrorDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -85,7 +84,7 @@ namespace UI.API.Controllers
         /// cref="PaginatedResponseDto{T}"/> of <see cref="LogErrorDto"/> items if successful. Returns an <see
         /// cref="ErrorResponseDto"/> with the appropriate status code if the request is unauthorized, forbidden, or not
         /// found.</returns>
-        [HttpGet("search")]
+        [HttpGet("v1/log-error/search")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<PaginatedResponseDto<LogErrorDto>>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -117,7 +116,7 @@ namespace UI.API.Controllers
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the saved <see
         /// cref="LogErrorDto"/> if the operation succeeds; otherwise, an <see cref="ErrorResponseDto"/> describing the
         /// error.</returns>
-        [HttpPost("save")]
+        [HttpPost("v1/log-error/save-error")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<LogErrorDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -136,7 +135,7 @@ namespace UI.API.Controllers
         /// <param name="command">The command containing the details of the log error to create. Cannot be <see langword="null"/>.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the created <see
         /// cref="LogErrorDto"/> if successful; otherwise, an <see cref="ErrorResponseDto"/> indicating the error.</returns>
-        [HttpPost]
+        [HttpPost("v1/log-error")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<LogErrorDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -158,7 +157,7 @@ namespace UI.API.Controllers
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the updated <see
         /// cref="LogErrorDto"/> if the update is successful; otherwise, an <see cref="ErrorResponseDto"/> describing
         /// the error.</returns>
-        [HttpPut("{id}")]
+        [HttpPut("v1/log-error/{id}")]
         [Authorize]
         [ProducesResponseType(typeof(SuccessResponse<LogErrorDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
@@ -180,7 +179,7 @@ namespace UI.API.Controllers
         /// <returns>— An <see cref="IActionResult"/> indicating the result of the delete operation. Returns status code 200 if
         /// the deletion is successful; 401 if the user is unauthorized; 403 if the user does not have permission; or
         /// 404 if the entry is not found.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("v1/log-error/{id}")]
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]

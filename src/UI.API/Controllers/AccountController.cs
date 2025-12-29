@@ -12,7 +12,6 @@ using UI.API.Models.Requests;
 
 namespace UI.API.Controllers
 {
-    [Route("api/[controller]")]
     public class AccountController : CoreController
     {
         private readonly IMediatorHandler _mediator;
