@@ -29,14 +29,12 @@ namespace Data.Context
             _defaultSchema = _configuration["DefaultSchema"];
         }
 
-        public DbSet<Status> Status { get; set; }
-        public DbSet<LogError> LogErrors { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema(_defaultSchema);
-            modelBuilder.AddConfiguration(new StatusMapping(this._schema));
-            modelBuilder.AddConfiguration(new LogErrorMapping(this._schema));
+            modelBuilder.AddConfiguration(new ProductMapping(this._schema));
             base.OnModelCreating(modelBuilder);
         }
 

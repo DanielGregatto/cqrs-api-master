@@ -48,9 +48,9 @@ public static class MockDbContextHelper
         return new AppDbContext(options, mockConfiguration.Object);
     }
 
-    public static async Task<AppDbContext> SeedStatusData(this AppDbContext context, List<Status> statuses)
+    public static async Task<AppDbContext> SeedProductData(this AppDbContext context, List<Product> products)
     {
-        await context.Status.AddRangeAsync(statuses);
+        await context.Products.AddRangeAsync(products);
         await context.SaveChangesAsync();
         return context;
     }
