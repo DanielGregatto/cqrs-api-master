@@ -24,7 +24,6 @@ public class AccountCommandFixture
 
         return new UpdateAddressCommand
         {
-            UserId = Guid.NewGuid(),
             Cep = _faker.Random.Replace("########"), // 8 digits as required by validator
             Street = street.Length > 200 ? street.Substring(0, 200) : street,
             Number = _faker.Random.Number(1, 9999).ToString(),
@@ -42,7 +41,6 @@ public class AccountCommandFixture
 
         return new UpdatePasswordCommand
         {
-            UserId = Guid.NewGuid(),
             CurrentPassword = password,
             NewPassword = newPassword,
             ConfirmNewPassword = newPassword
@@ -53,7 +51,6 @@ public class AccountCommandFixture
     {
         return new UpdatePersonalInfoCommand
         {
-            UserId = Guid.NewGuid(),
             FullName = _faker.Name.FirstName() + " " + _faker.Name.LastName(), // Must contain space
             PhoneNumber = _faker.Random.Replace("(##) #####-####"), // Valid phone format
             CPF_CNPJ = _faker.Random.Replace("###########"), // 11 digits for CPF

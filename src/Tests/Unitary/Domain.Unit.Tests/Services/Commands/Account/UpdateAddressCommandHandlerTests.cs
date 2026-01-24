@@ -52,11 +52,12 @@ public class UpdateAddressCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupUpdateAsync(true);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdateAddressCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdateAddressCommandHandler(
             _context,
@@ -74,7 +75,7 @@ public class UpdateAddressCommandHandlerTests : IDisposable
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data.Id.Should().Be(command.UserId);
+        result.Data.Id.Should().Be(userId);
         result.Data.Street.Should().Be(command.Street);
         result.Data.City.Should().Be(command.City);
         result.Data.State.Should().Be(command.State);
@@ -115,11 +116,12 @@ public class UpdateAddressCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupUpdateAsync(false);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdateAddressCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdateAddressCommandHandler(
             _context,

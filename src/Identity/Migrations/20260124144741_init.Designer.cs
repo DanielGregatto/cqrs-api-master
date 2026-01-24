@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    [Migration("20251226165822_init")]
+    [Migration("20260124144741_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Identity.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("repobasecsf")
+                .HasDefaultSchema("CQRS")
                 .HasAnnotation("ProductVersion", "8.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -142,7 +142,7 @@ namespace Identity.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("repobasecsf_AspNetUsers", "repobasecsf");
+                    b.ToTable("DEMO_AspNetUsers", "CQRS");
                 });
 
             modelBuilder.Entity("Identity.Model.UserRefreshToken", b =>
@@ -169,7 +169,7 @@ namespace Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("repobasecsf_UserRefreshToken", "repobasecsf");
+                    b.ToTable("DEMO_UserRefreshToken", "CQRS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -196,7 +196,7 @@ namespace Identity.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("repobasecsf_AspNetRoles", "repobasecsf");
+                    b.ToTable("DEMO_AspNetRoles", "CQRS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -221,7 +221,7 @@ namespace Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("repobasecsf_AspNetRoleClaims", "repobasecsf");
+                    b.ToTable("DEMO_AspNetRoleClaims", "CQRS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -246,7 +246,7 @@ namespace Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("repobasecsf_AspNetUserClaims", "repobasecsf");
+                    b.ToTable("DEMO_AspNetUserClaims", "CQRS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -268,7 +268,7 @@ namespace Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("repobasecsf_AspNetUserLogins", "repobasecsf");
+                    b.ToTable("DEMO_AspNetUserLogins", "CQRS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -283,7 +283,7 @@ namespace Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("repobasecsf_AspNetUserRoles", "repobasecsf");
+                    b.ToTable("DEMO_AspNetUserRoles", "CQRS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -302,7 +302,7 @@ namespace Identity.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("repobasecsf_AspNetUserTokens", "repobasecsf");
+                    b.ToTable("DEMO_AspNetUserTokens", "CQRS");
                 });
 
             modelBuilder.Entity("Identity.Model.UserRefreshToken", b =>

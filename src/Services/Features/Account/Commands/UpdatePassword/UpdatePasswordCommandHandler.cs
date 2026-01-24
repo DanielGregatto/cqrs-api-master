@@ -44,7 +44,7 @@ namespace Services.Features.Account.Commands.UpdatePassword
             if (validationError != null)
                 return validationError;
 
-            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            var user = await _userManager.FindByIdAsync(UserID.ToString());
 
             if (user == null)
                 return Result<string>.NotFound(_localizer["Account_UserNotFound"]);
@@ -63,7 +63,7 @@ namespace Services.Features.Account.Commands.UpdatePassword
 
             if (!result.Succeeded)
             {
-                _logger.LogError("Failed to update password for user {UserId}", request.UserId);
+                _logger.LogError("Failed to update password for user {UserId}", UserID);
                 var errors = result.Errors.Select(e => new Error(e.Description, ErrorTypes.Validation)).ToArray();
                 return Result<string>.ValidationFailure(errors);
             }
