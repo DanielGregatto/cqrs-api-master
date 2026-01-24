@@ -1,7 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.DTO.Responses;
 using Identity.Model;
-using UI.API.Models.Requests;
+using Services.Features.Account.Commands.UpdateAddress;
+using Services.Features.Account.Commands.UpdatePersonalInfo;
 
 namespace UI.API.Configurations
 {
@@ -11,9 +12,9 @@ namespace UI.API.Configurations
         {
             CreateMap<ApplicationUser, ProfileDto>().ReverseMap();
 
-            CreateMap<ApplicationUser, ProfilePersonalInfoRequest>().ReverseMap();
+            CreateMap<ApplicationUser, UpdatePersonalInfoCommand>().ReverseMap();
 
-            CreateMap<ApplicationUser, ProfileAddressRequest>().ReverseMap();
+            CreateMap<ApplicationUser, UpdateAddressCommand>().ReverseMap();
         }
     }
 }

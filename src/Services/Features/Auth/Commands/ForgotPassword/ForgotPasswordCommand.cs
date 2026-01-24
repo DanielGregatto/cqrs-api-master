@@ -1,4 +1,4 @@
-using Domain.DTO.Infrastructure.CQRS;using Domain.Enums;
+using Domain.DTO.Infrastructure.CQRS;
 using Identity.Model.Responses;
 using MediatR;
 

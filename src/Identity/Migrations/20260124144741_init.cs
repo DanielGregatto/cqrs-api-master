@@ -12,11 +12,11 @@ namespace Identity.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "repobasecsf");
+                name: "CQRS");
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetRoles",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetRoles",
+                schema: "CQRS",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -26,12 +26,12 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetRoles", x => x.Id);
+                    table.PrimaryKey("PK_DEMO_AspNetRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetUsers",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetUsers",
+                schema: "CQRS",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -70,12 +70,12 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_DEMO_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetRoleClaims",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetRoleClaims",
+                schema: "CQRS",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -86,19 +86,19 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_DEMO_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_repobasecsf_AspNetRoleClaims_repobasecsf_AspNetRoles_RoleId",
+                        name: "FK_DEMO_AspNetRoleClaims_DEMO_AspNetRoles_RoleId",
                         column: x => x.RoleId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetRoles",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetUserClaims",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetUserClaims",
+                schema: "CQRS",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -109,19 +109,19 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetUserClaims", x => x.Id);
+                    table.PrimaryKey("PK_DEMO_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_repobasecsf_AspNetUserClaims_repobasecsf_AspNetUsers_UserId",
+                        name: "FK_DEMO_AspNetUserClaims_DEMO_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetUsers",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetUserLogins",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetUserLogins",
+                schema: "CQRS",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -131,19 +131,19 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_DEMO_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_repobasecsf_AspNetUserLogins_repobasecsf_AspNetUsers_UserId",
+                        name: "FK_DEMO_AspNetUserLogins_DEMO_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetUsers",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetUserRoles",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetUserRoles",
+                schema: "CQRS",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -151,26 +151,26 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_DEMO_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_repobasecsf_AspNetUserRoles_repobasecsf_AspNetRoles_RoleId",
+                        name: "FK_DEMO_AspNetUserRoles_DEMO_AspNetRoles_RoleId",
                         column: x => x.RoleId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetRoles",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_repobasecsf_AspNetUserRoles_repobasecsf_AspNetUsers_UserId",
+                        name: "FK_DEMO_AspNetUserRoles_DEMO_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetUsers",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_AspNetUserTokens",
-                schema: "repobasecsf",
+                name: "DEMO_AspNetUserTokens",
+                schema: "CQRS",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -180,19 +180,19 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_DEMO_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_repobasecsf_AspNetUserTokens_repobasecsf_AspNetUsers_UserId",
+                        name: "FK_DEMO_AspNetUserTokens_DEMO_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetUsers",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "repobasecsf_UserRefreshToken",
-                schema: "repobasecsf",
+                name: "DEMO_UserRefreshToken",
+                schema: "CQRS",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -203,66 +203,66 @@ namespace Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_repobasecsf_UserRefreshToken", x => x.Id);
+                    table.PrimaryKey("PK_DEMO_UserRefreshToken", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_repobasecsf_UserRefreshToken_repobasecsf_AspNetUsers_UserId",
+                        name: "FK_DEMO_UserRefreshToken_DEMO_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "repobasecsf",
-                        principalTable: "repobasecsf_AspNetUsers",
+                        principalSchema: "CQRS",
+                        principalTable: "DEMO_AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_repobasecsf_AspNetRoleClaims_RoleId",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetRoleClaims",
+                name: "IX_DEMO_AspNetRoleClaims_RoleId",
+                schema: "CQRS",
+                table: "DEMO_AspNetRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetRoles",
+                schema: "CQRS",
+                table: "DEMO_AspNetRoles",
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_repobasecsf_AspNetUserClaims_UserId",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetUserClaims",
+                name: "IX_DEMO_AspNetUserClaims_UserId",
+                schema: "CQRS",
+                table: "DEMO_AspNetUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_repobasecsf_AspNetUserLogins_UserId",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetUserLogins",
+                name: "IX_DEMO_AspNetUserLogins_UserId",
+                schema: "CQRS",
+                table: "DEMO_AspNetUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_repobasecsf_AspNetUserRoles_RoleId",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetUserRoles",
+                name: "IX_DEMO_AspNetUserRoles_RoleId",
+                schema: "CQRS",
+                table: "DEMO_AspNetUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetUsers",
+                schema: "CQRS",
+                table: "DEMO_AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                schema: "repobasecsf",
-                table: "repobasecsf_AspNetUsers",
+                schema: "CQRS",
+                table: "DEMO_AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_repobasecsf_UserRefreshToken_UserId",
-                schema: "repobasecsf",
-                table: "repobasecsf_UserRefreshToken",
+                name: "IX_DEMO_UserRefreshToken_UserId",
+                schema: "CQRS",
+                table: "DEMO_UserRefreshToken",
                 column: "UserId");
         }
 
@@ -270,36 +270,36 @@ namespace Identity.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetRoleClaims",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetRoleClaims",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetUserClaims",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetUserClaims",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetUserLogins",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetUserLogins",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetUserRoles",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetUserRoles",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetUserTokens",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetUserTokens",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_UserRefreshToken",
-                schema: "repobasecsf");
+                name: "DEMO_UserRefreshToken",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetRoles",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetRoles",
+                schema: "CQRS");
 
             migrationBuilder.DropTable(
-                name: "repobasecsf_AspNetUsers",
-                schema: "repobasecsf");
+                name: "DEMO_AspNetUsers",
+                schema: "CQRS");
         }
     }
 }

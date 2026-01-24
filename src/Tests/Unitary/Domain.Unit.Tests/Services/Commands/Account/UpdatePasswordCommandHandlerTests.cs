@@ -52,12 +52,13 @@ public class UpdatePasswordCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupCheckPasswordAsync(true);
         _mockUserManager.SetupChangePasswordAsync(true);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdatePasswordCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdatePasswordCommandHandler(
             _context,
@@ -114,11 +115,12 @@ public class UpdatePasswordCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupCheckPasswordAsync(false);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdatePasswordCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdatePasswordCommandHandler(
             _context,
@@ -145,12 +147,13 @@ public class UpdatePasswordCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupCheckPasswordAsync(true);
         _mockUserManager.SetupChangePasswordAsync(false);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdatePasswordCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdatePasswordCommandHandler(
             _context,

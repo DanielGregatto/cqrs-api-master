@@ -1,8 +1,7 @@
-﻿using Domain.DTO.Infrastructure.API;
+using Domain.DTO.Infrastructure.API;
 using Domain.Enums;
 using Domain.Interfaces;
 using Identity.Model;
-using Identity.Model.Requests;
 using Identity.Model.Responses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -40,35 +39,30 @@ namespace UI.API.Controllers
             _user = user;
             _logger = logger;
         }
-      
+
         /// <summary>
         /// Authenticates a user with the provided credentials and returns a login response.
         /// </summary>
         /// <remarks>This endpoint expects a POST request with user credentials in the request body. If
         /// the credentials are valid, a successful response with login information is returned; otherwise, an error
         /// response is provided.</remarks>
-        /// <param name="model">The login request containing the user's email and password. Must not be <c>null</c>.</param>
+        /// <param name="command">The login command containing the user's email and password.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with login details if
         /// authentication is successful, or an <see cref="ErrorResponseDto"/> if authentication fails.</returns>
         [HttpPost("v1/auth/login")]
         [ProducesResponseType(typeof(SuccessResponse<LoginDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
-        public async Task<IActionResult> Login([FromBody] CustomLoginRequest model)
+        public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
-            _logger.LogInformation("Login attempt for user: {Email}", model.Email);
+            _logger.LogInformation("Login attempt for user: {Email}", command.Email);
 
-            var command = new LoginCommand
-            {
-                Email = model.Email,
-                Password = model.Password
-            };
             var result = await _mediator.SendCommand(command);
 
             if (result.IsSuccess)
-                _logger.LogInformation("User logged in successfully: {Email}", model.Email);
+                _logger.LogInformation("User logged in successfully: {Email}", command.Email);
             else
                 _logger.LogWarning("Login failed for user: {Email}. Errors: {Errors}",
-                    model.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
+                    command.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
 
             return Response(result);
         }
@@ -79,31 +73,23 @@ namespace UI.API.Controllers
         /// <remarks>This endpoint creates a new user account and initiates the email confirmation
         /// process.  The client must provide all required registration fields in the request body.  If registration is
         /// successful, an email confirmation link is generated and sent to the user.</remarks>
-        /// <param name="model">The registration request containing user information such as email, password, and confirmation password. 
-        /// Must not be <see langword="null"/>.</param>
+        /// <param name="command">The registration command containing user information such as email, password, and confirmation password.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the registered user
         /// details if successful;  otherwise, a response indicating the reason for failure.</returns>
         [HttpPost("v1/auth/register")]
         [ProducesResponseType(typeof(SuccessResponse<RegisterDto>), 200)]
-        public async Task<IActionResult> Register([FromBody] CustomRegisterRequest model)
+        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            _logger.LogInformation("Registration attempt for user: {Email}", model.Email);
+            _logger.LogInformation("Registration attempt for user: {Email}", command.Email);
 
-            var baseUrl = Url.Action(nameof(ConfirmEmail), "Auth", new { }, Request.Scheme);
-            var command = new RegisterCommand
-            {
-                Email = model.Email,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword,
-                ConfirmationBaseUrl = baseUrl
-            };
+            command.ConfirmationBaseUrl = Url.Action(nameof(ConfirmEmail), "Auth", new { }, Request.Scheme);
             var result = await _mediator.SendCommand(command);
 
             if (result.IsSuccess)
-                _logger.LogInformation("User registered successfully: {Email}", model.Email);
+                _logger.LogInformation("User registered successfully: {Email}", command.Email);
             else
                 _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}",
-                    model.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
+                    command.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
 
             return Response(result);
         }
@@ -115,31 +101,23 @@ namespace UI.API.Controllers
         /// <remarks>This endpoint is typically used as part of a password recovery workflow. The reset
         /// token must be valid and not expired. The new password and confirmation must match and meet any password
         /// policy requirements.</remarks>
-        /// <param name="model">The request containing the user's email address, reset token, new password, and password confirmation. All
-        /// fields are required and must be valid for the password reset to succeed.</param>
+        /// <param name="command">The command containing the user's email address, reset token, new password, and password confirmation.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with password reset details if
         /// successful, or an <see cref="ErrorResponseDto"/> with error information if the operation fails.</returns>
         [HttpPost("v1/auth/reset-password")]
         [ProducesResponseType(typeof(SuccessResponse<ResetPasswordDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
-        public async Task<IActionResult> ResetPassword([FromBody] CustomResetPasswordRequest model)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
         {
-            _logger.LogInformation("Password reset attempt for user: {Email}", model.Email);
+            _logger.LogInformation("Password reset attempt for user: {Email}", command.Email);
 
-            var command = new ResetPasswordCommand
-            {
-                Email = model.Email,
-                Token = model.Token,
-                NewPassword = model.NewPassword,
-                ConfirmPassword = model.ConfirmPassword
-            };
             var result = await _mediator.SendCommand(command);
 
             if (result.IsSuccess)
-                _logger.LogInformation("Password reset successfully for user: {Email}", model.Email);
+                _logger.LogInformation("Password reset successfully for user: {Email}", command.Email);
             else
                 _logger.LogWarning("Password reset failed for user: {Email}. Errors: {Errors}",
-                    model.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
+                    command.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
 
             return Response(result);
         }
@@ -150,28 +128,23 @@ namespace UI.API.Controllers
         /// <remarks>This endpoint does not reveal whether the email address exists in the system to
         /// prevent user enumeration.  The response will indicate success if the password reset process is initiated, or
         /// an error if the user is not found.</remarks>
-        /// <param name="model">The request containing the email address of the user who has forgotten their password.  The <see
-        /// cref="CustomForgotPasswordRequest.Email"/> property must not be null or empty.</param>
+        /// <param name="command">The command containing the email address of the user who has forgotten their password.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with password reset details if
         /// the email is found;  otherwise, an <see cref="ErrorResponseDto"/> indicating that the user was not found.</returns>
         [HttpPost("v1/auth/forgot-password")]
         [ProducesResponseType(typeof(SuccessResponse<ForgotPasswordDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
-        public async Task<IActionResult> ForgotPassword([FromBody] CustomForgotPasswordRequest model)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
         {
-            _logger.LogInformation("Forgot password request for user: {Email}", model.Email);
+            _logger.LogInformation("Forgot password request for user: {Email}", command.Email);
 
-            var command = new ForgotPasswordCommand
-            {
-                Email = model.Email
-            };
             var result = await _mediator.SendCommand(command);
 
             if (result.IsSuccess)
-                _logger.LogInformation("Forgot password email sent for user: {Email}", model.Email);
+                _logger.LogInformation("Forgot password email sent for user: {Email}", command.Email);
             else
                 _logger.LogWarning("Forgot password failed for user: {Email}. Errors: {Errors}",
-                    model.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
+                    command.Email, string.Join(", ", result.Errors.Select(e => e.Message)));
 
             return Response(result);
         }
@@ -182,30 +155,25 @@ namespace UI.API.Controllers
         /// <remarks>This endpoint is used to obtain a new access token when the current one has
         /// expired, provided a valid refresh token is supplied. The response will indicate success or provide error
         /// details if the refresh token is invalid or expired.</remarks>
-        /// <param name="model">The request containing the user identifier and refresh token to be validated and exchanged for a new access
-        /// token. Must not be <c>null</c>.</param>
+        /// <param name="command">The command containing the user identifier and refresh token to be validated and exchanged for a new access
+        /// token.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the new access token and
         /// related login information if the refresh is successful; otherwise, an <see cref="ErrorResponseDto"/>
         /// describing the failure.</returns>
         [HttpPost("v1/auth/refresh")]
         [ProducesResponseType(typeof(SuccessResponse<LoginDto>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
-        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest model)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command)
         {
-            _logger.LogInformation("Token refresh attempt for user: {UserId}", model.UserId);
+            _logger.LogInformation("Token refresh attempt for user: {UserId}", command.UserId);
 
-            var command = new RefreshTokenCommand
-            {
-                UserId = model.UserId,
-                RefreshToken = model.RefreshToken
-            };
             var result = await _mediator.SendCommand(command);
 
             if (result.IsSuccess)
-                _logger.LogInformation("Token refreshed successfully for user: {UserId}", model.UserId);
+                _logger.LogInformation("Token refreshed successfully for user: {UserId}", command.UserId);
             else
                 _logger.LogWarning("Token refresh failed for user: {UserId}. Errors: {Errors}",
-                    model.UserId, string.Join(", ", result.Errors.Select(e => e.Message)));
+                    command.UserId, string.Join(", ", result.Errors.Select(e => e.Message)));
 
             return Response(result);
         }

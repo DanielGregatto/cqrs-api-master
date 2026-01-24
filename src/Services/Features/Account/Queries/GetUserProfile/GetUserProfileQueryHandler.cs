@@ -1,5 +1,6 @@
 using Domain.DTO.Infrastructure.CQRS;
 using Domain.DTO.Responses;
+using Domain.Interfaces;
 using Identity.Model;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -14,25 +15,29 @@ namespace Services.Features.Account.Queries.GetUserProfile
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<Domain.Resources.Messages> _localizer;
+        private readonly IUser _currentUser;
 
         public GetUserProfileQueryHandler(
             UserManager<ApplicationUser> userManager,
-            IStringLocalizer<Domain.Resources.Messages> localizer)
+            IStringLocalizer<Domain.Resources.Messages> localizer,
+            IUser currentUser)
         {
             _userManager = userManager;
             _localizer = localizer;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<ProfileDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            var userId = _currentUser.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
                 return Result<ProfileDto>.NotFound(_localizer["Account_UserNotFound"]);
 
             var profile = new ProfileDto
             {
-                Id = request.UserId,
+                Id = userId,
                 Email = user.Email ?? "",
                 FullName = user.FullName,
                 CPF_CNPJ = user.CPF_CNPJ,

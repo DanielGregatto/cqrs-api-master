@@ -46,7 +46,7 @@ namespace Services.Features.Account.Commands.UpdatePersonalInfo
             if (validationError != null)
                 return validationError;
 
-            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            var user = await _userManager.FindByIdAsync(UserID.ToString());
 
             if (user == null)
                 return Result<ProfileDto>.NotFound(_localizer["Account_UserNotFound"]);
@@ -62,14 +62,14 @@ namespace Services.Features.Account.Commands.UpdatePersonalInfo
 
             if (!result.Succeeded)
             {
-                _logger.LogError("Failed to update user personal info for user {UserId}", request.UserId);
+                _logger.LogError("Failed to update user personal info for user {UserId}", UserID);
                 var errors = result.Errors.Select(e => new Error(e.Description, ErrorTypes.Database)).ToArray();
                 return Result<ProfileDto>.ValidationFailure(errors);
             }
 
             var profile = new ProfileDto
             {
-                Id = request.UserId,
+                Id = UserID,
                 Email = user.Email ?? "",
                 FullName = user.FullName,
                 CPF_CNPJ = user.CPF_CNPJ,

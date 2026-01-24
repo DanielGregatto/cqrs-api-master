@@ -59,11 +59,12 @@ public class UpdatePersonalInfoCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupUpdateAsync(true);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdatePersonalInfoCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdatePersonalInfoCommandHandler(
             _context,
@@ -81,7 +82,7 @@ public class UpdatePersonalInfoCommandHandlerTests : IDisposable
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data.Id.Should().Be(command.UserId);
+        result.Data.Id.Should().Be(userId);
         result.Data.FullName.Should().Be(command.FullName);
         result.Data.PhoneNumber.Should().Be(command.PhoneNumber);
         result.Data.CPF_CNPJ.Should().Be(command.CPF_CNPJ);
@@ -123,11 +124,12 @@ public class UpdatePersonalInfoCommandHandlerTests : IDisposable
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
         _mockUserManager.SetupUpdateAsync(false);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
         var command = _commandFixture.GenerateUpdatePersonalInfoCommand();
-        command.UserId = Guid.Parse(existingUser.Id);
 
         var handler = new UpdatePersonalInfoCommandHandler(
             _context,

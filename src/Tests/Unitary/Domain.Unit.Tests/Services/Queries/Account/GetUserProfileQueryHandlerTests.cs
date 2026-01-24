@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Interfaces;
 using FluentAssertions;
 using Identity.Model;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +18,14 @@ public class GetUserProfileQueryHandlerTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
     private readonly Mock<IStringLocalizer<Domain.Resources.Messages>> _mockLocalizer;
+    private readonly Mock<IUser> _mockUser;
     private readonly ApplicationUserFixture _userFixture;
 
     public GetUserProfileQueryHandlerTests()
     {
         _mockUserManager = MockUserManagerHelper.CreateMockUserManager();
         _mockLocalizer = new Mock<IStringLocalizer<Domain.Resources.Messages>>();
+        _mockUser = new Mock<IUser>();
 
         // Setup localizer to return non-null strings
         _mockLocalizer.Setup(l => l[It.IsAny<string>()])
@@ -36,13 +39,16 @@ public class GetUserProfileQueryHandlerTests
     {
         // Arrange
         var existingUser = _userFixture.GenerateUser();
+        var userId = Guid.Parse(existingUser.Id);
         _mockUserManager.SetupFindByIdAsync(existingUser);
+        _mockUser.Setup(u => u.GetUserId()).Returns(userId);
 
-        var query = new GetUserProfileQuery { UserId = Guid.Parse(existingUser.Id) };
+        var query = new GetUserProfileQuery();
 
         var handler = new GetUserProfileQueryHandler(
             _mockUserManager.Object,
-            _mockLocalizer.Object
+            _mockLocalizer.Object,
+            _mockUser.Object
         );
 
         // Act
@@ -52,7 +58,7 @@ public class GetUserProfileQueryHandlerTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data.Id.Should().Be(Guid.Parse(existingUser.Id));
+        result.Data.Id.Should().Be(userId);
         result.Data.Email.Should().Be(existingUser.Email);
         result.Data.FullName.Should().Be(existingUser.FullName);
         result.Data.CPF_CNPJ.Should().Be(existingUser.CPF_CNPJ);
@@ -64,12 +70,14 @@ public class GetUserProfileQueryHandlerTests
     {
         // Arrange
         _mockUserManager.SetupFindByIdAsync(null);
+        _mockUser.Setup(u => u.GetUserId()).Returns(Guid.NewGuid());
 
-        var query = new GetUserProfileQuery { UserId = Guid.NewGuid() };
+        var query = new GetUserProfileQuery();
 
         var handler = new GetUserProfileQueryHandler(
             _mockUserManager.Object,
-            _mockLocalizer.Object
+            _mockLocalizer.Object,
+            _mockUser.Object
         );
 
         // Act
