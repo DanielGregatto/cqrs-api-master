@@ -1,5 +1,5 @@
 ﻿using Domain.Configs;
-using Domain.DTO.Infrastructure.API;
+using Domain.Contracts.API;
 using Microsoft.Extensions.Options;
 using Services.Interfaces;
 using System.Collections.Generic;

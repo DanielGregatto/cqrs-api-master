@@ -1,8 +1,9 @@
+using Domain;
 using System;
 
-namespace Domain.DTO.Responses
+namespace Services.Contracts.Results
 {
-    public record ProductDto(
+    public record ProductResult(
         Guid Id,
         string Name,
         string Description,
@@ -14,11 +15,11 @@ namespace Domain.DTO.Responses
         bool Active,
         DateTime CreatedAt)
     {
-        public static ProductDto FromEntity(Product product)
+        public static ProductResult FromEntity(Product product)
         {
             if (product == null) return null;
 
-            return new ProductDto(
+            return new ProductResult(
                 product.Id,
                 product.Name ?? "",
                 product.Description ?? "",

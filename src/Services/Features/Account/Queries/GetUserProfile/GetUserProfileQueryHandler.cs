@@ -1,5 +1,5 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using Domain.Interfaces;
 using Identity.Model;
 using MediatR;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Account.Queries.GetUserProfile
 {
     public class GetUserProfileQueryHandler :
-        IRequestHandler<GetUserProfileQuery, Result<ProfileDto>>
+        IRequestHandler<GetUserProfileQuery, Result<ProfileResult>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<Domain.Resources.Messages> _localizer;
@@ -27,15 +27,15 @@ namespace Services.Features.Account.Queries.GetUserProfile
             _currentUser = currentUser;
         }
 
-        public async Task<Result<ProfileDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ProfileResult>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
             var userId = _currentUser.GetUserId();
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
-                return Result<ProfileDto>.NotFound(_localizer["Account_UserNotFound"]);
+                return Result<ProfileResult>.NotFound(_localizer["Account_UserNotFound"]);
 
-            var profile = new ProfileDto
+            var profile = new ProfileResult
             {
                 Id = userId,
                 Email = user.Email ?? "",
@@ -53,7 +53,7 @@ namespace Services.Features.Account.Queries.GetUserProfile
                 Country = user.Country
             };
 
-            return Result<ProfileDto>.Success(profile);
+            return Result<ProfileResult>.Success(profile);
         }
     }
 }

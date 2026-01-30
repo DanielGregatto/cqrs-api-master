@@ -1,7 +1,7 @@
 using Data.Context;
-using Domain.DTO.Infrastructure.API;
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.API;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Product.Queries.SearchProductsPaginated
 {
     public class SearchProductsPaginatedQueryHandler : BaseQueryHandler,
-        IRequestHandler<SearchProductsPaginatedQuery, Result<PaginatedResponseDto<ProductDto>>>
+        IRequestHandler<SearchProductsPaginatedQuery, Result<PaginatedResponseDto<ProductResult>>>
     {
         public SearchProductsPaginatedQueryHandler(
             AppDbContext context,
@@ -21,7 +21,7 @@ namespace Services.Features.Product.Queries.SearchProductsPaginated
         {
         }
 
-        public async Task<Result<PaginatedResponseDto<ProductDto>>> Handle(
+        public async Task<Result<PaginatedResponseDto<ProductResult>>> Handle(
             SearchProductsPaginatedQuery request,
             CancellationToken cancellationToken)
         {
@@ -46,9 +46,9 @@ namespace Services.Features.Product.Queries.SearchProductsPaginated
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            var productDtos = items.Select(ProductDto.FromEntity).ToList();
+            var productDtos = items.Select(ProductResult.FromEntity).ToList();
 
-            var paginatedResponse = new PaginatedResponseDto<ProductDto>
+            var paginatedResponse = new PaginatedResponseDto<ProductResult>
             {
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
@@ -58,7 +58,7 @@ namespace Services.Features.Product.Queries.SearchProductsPaginated
                 Items = productDtos
             };
 
-            return Result<PaginatedResponseDto<ProductDto>>.Success(paginatedResponse);
+            return Result<PaginatedResponseDto<ProductResult>>.Success(paginatedResponse);
         }
     }
 }

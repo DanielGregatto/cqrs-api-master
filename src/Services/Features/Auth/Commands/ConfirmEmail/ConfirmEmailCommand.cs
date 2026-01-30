@@ -1,4 +1,5 @@
-using Domain.DTO.Infrastructure.CQRS;using Domain.Enums;
+using Domain.Contracts.Common;
+using Domain.Enums;
 using MediatR;
 using System;
 

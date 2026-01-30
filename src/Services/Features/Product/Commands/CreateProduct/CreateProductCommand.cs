@@ -1,11 +1,11 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace Services.Features.Product.Commands.CreateProduct
 {
-    public class CreateProductCommand : IRequest<Result<ProductDto>>
+    public class CreateProductCommand : IRequest<Result<ProductResult>>
     {
         public string Name { get; set; }
         public string Description { get; set; }

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Domain.DTO.Responses
+namespace Services.Contracts.Results
 {
-    public class ProfileDto
+    public class ProfileResult
     {
         public Guid Id { get; set; }
         public string Email { get; set; }

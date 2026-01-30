@@ -1,4 +1,4 @@
-﻿namespace Domain.DTO.Infrastructure.API
+﻿namespace Domain.Contracts.API
 {
     public class ErrorResponseItemDto
     {

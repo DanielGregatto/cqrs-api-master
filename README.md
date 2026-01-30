@@ -34,7 +34,9 @@ A production-ready **CQRS (Command Query Responsibility Segregation)** API boile
 - **Clean Architecture** - Clear separation of concerns across layers
 - **Domain Events** - Automatic entity lifecycle events (Insert, Update, Delete)
 - **UoW Pattern** with Unit of Work that triggers domain events
-- **Result Pattern** - Consistent error handling across the application
+- **Result Pattern** - Typed `Result<T>` with `Error` class and `ErrorTypes` enum
+- **Contracts Architecture** - Domain contracts (Result, Error) + API contracts (responses) + Service result DTOs
+- **Entity Self-Validation** - Entities implement `IValidatableObject` for required property validation
 
 ### Security & Resilience
 - **Rate Limiting** - Prevent API abuse with configurable limits
@@ -45,7 +47,7 @@ A production-ready **CQRS (Command Query Responsibility Segregation)** API boile
 - **Global Exception Handling** with correlation ID tracking
 
 ### Development Features
-- **FluentValidation** - Declarative validation for all commands
+- **Dual Validation** - Entity-level (`IValidatableObject`) + Command-level (FluentValidation)
 - **AutoMapper** - Object-to-object mapping
 - **Swagger/OpenAPI** documentation with JWT support
 - **Localization** - Multi-language support (en-US, pt-BR)
@@ -89,7 +91,7 @@ This project follows **Clean Architecture** principles with clear separation of 
 ┌─────────────────────────▼───────────────────────────────────┐
 │                       Domain Layer                           │
 │                  (Domain + Domain.Core)                      │
-│          Entities, DTOs, Interfaces, Events, Enums           │
+│         Entities, Contracts, Interfaces, Events, Enums       │
 └─────────────────────────┬───────────────────────────────────┘
                           │
 ┌─────────────────────────▼───────────────────────────────────┐
@@ -108,7 +110,7 @@ Controller → MediatR → CommandHandler → Validation → Business Logic → 
 
 **Queries** (Read Operations):
 ```
-Controller → MediatR → QueryHandler → EF Core (Read-Only) → DTOs → Response
+Controller → MediatR → QueryHandler → EF Core (Read-Only) → Result<T> → Response
 ```
 
 All operations return a `Result<T>` object for consistent error handling.
@@ -273,20 +275,22 @@ src/
 │   │   ├── Account/             # User account management
 │   │   │   ├── Commands/        # UpdateProfile, ChangePassword, etc.
 │   │   │   └── Queries/         # GetProfile, etc.
-│   │   └── Status/              # Example domain feature
+│   │   └── Product/             # Example domain feature
 │   │       ├── Commands/        # Create, Update, Delete
-│   │       └── Queries/         # GetAll, GetById, Search
+│   │       └── Queries/         # GetAll, GetById, SearchPaginated
+│   ├── Contracts/               # Application-level result DTOs
+│   │   └── Results/             # ProductResult, ProfileResult, etc.
 │   ├── Core/                    # Base handlers
 │   │   ├── BaseCommandHandler.cs
 │   │   └── BaseQueryHandler.cs
 │   └── Infrastructure/          # MediatorHandler implementation
 │
 ├── Domain/                      # Domain Layer
-│   ├── Entities/                # Domain entities (Status, LogError, etc.)
-│   ├── DTO/                     # Data Transfer Objects
-│   │   ├── Responses/           # Response DTOs
-│   │   └── Infrastructure/      # CQRS, API infrastructure DTOs
-│   ├── Enums/                   # Domain enumerations
+│   ├── Entities/                # Domain entities (Product, LogError, etc.)
+│   ├── Contracts/               # Domain contracts
+│   │   ├── Common/              # Result<T>, Error, core contracts
+│   │   └── API/                 # API response contracts (ErrorResponseDto, PaginatedResponseDto, etc.)
+│   ├── Enums/                   # Domain enumerations (ErrorTypes, etc.)
 │   ├── Interfaces/              # Domain interfaces
 │   └── Resources/               # Localization resources
 │
@@ -342,18 +346,16 @@ src/
 | POST | `/v1/account/update-address` | Update address |
 | POST | `/v1/account/update-password` | Change password |
 
-### Status (Example CRUD) (`/api/status`)
+### Product (Example CRUD) (`/api/product`)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/status` | Get all status records |
-| GET | `/api/status/{id}` | Get status by ID |
-| GET | `/api/status/ativo` | Get active status ID |
-| GET | `/api/status/inativo` | Get inactive status ID |
-| GET | `/api/status/search` | Paginated search |
-| POST | `/api/status` | Create new status |
-| PUT | `/api/status/{id}` | Update status |
-| DELETE | `/api/status/{id}` | Delete status (soft delete) |
+| GET | `/api/product` | Get all products |
+| GET | `/api/product/{id}` | Get product by ID |
+| GET | `/api/product/search` | Paginated search with filters |
+| POST | `/api/product` | Create new product |
+| PUT | `/api/product/{id}` | Update product |
+| DELETE | `/api/product/{id}` | Delete product (soft delete) |
 
 For complete API documentation, run the project and visit `/swagger`.
 
@@ -374,7 +376,7 @@ dotnet test src/Tests/Unitary/Domain.Unit.Tests/Unit.Tests.csproj
 ### Run Specific Test Class
 
 ```bash
-dotnet test --filter "FullyQualifiedName~CreateStatusCommandHandlerTests"
+dotnet test --filter "FullyQualifiedName~CreateProductCommandHandlerTests"
 ```
 
 ### Run with Detailed Output
@@ -402,28 +404,29 @@ Search and replace across the solution:
 
 ### 3. Configure Your Domain
 
-Replace the example `Status` entity with your own domain entities:
+Use the example `Product` entity as a reference for your own domain entities:
 
-1. Create entity in `Domain/Entities/`
+1. Create entity in `Domain/` implementing `IValidatableObject` for self-validation
 2. Create entity mapping in `Data/Mappings/`
 3. Add DbSet to `AppDbContext`
-4. Create migration: `dotnet ef migrations add InitialCreate`
+4. Create result DTO in `Services/Contracts/Results/` (e.g., `YourEntityResult.cs`)
+5. Create migration: `dotnet ef migrations add InitialCreate`
 
 ### 4. Add Your Features
 
-Follow the existing pattern in `Services/Features/`:
+Follow the existing pattern in `Services/Features/` (see `Product` feature as reference):
 
 ```
 YourFeature/
 ├── Commands/
 │   └── CreateYourEntity/
-│       ├── CreateYourEntityCommand.cs
-│       ├── CreateYourEntityCommandHandler.cs
-│       └── CreateYourEntityCommandValidator.cs
+│       ├── CreateYourEntityCommand.cs          # IRequest<Result<YourEntityResult>>
+│       ├── CreateYourEntityCommandHandler.cs   # Returns Result<YourEntityResult>
+│       └── CreateYourEntityCommandValidator.cs # FluentValidation rules
 └── Queries/
     └── GetYourEntity/
-        ├── GetYourEntityQuery.cs
-        └── GetYourEntityQueryHandler.cs
+        ├── GetYourEntityQuery.cs               # IRequest<Result<YourEntityResult>>
+        └── GetYourEntityQueryHandler.cs        # Returns Result<YourEntityResult>
 ```
 
 ### 5. Create Controller
@@ -445,7 +448,14 @@ public class YourEntityController : CoreController
     public async Task<IActionResult> Create([FromBody] CreateYourEntityCommand command)
     {
         var result = await _mediator.SendCommand(command);
-        return Response(result);
+        return Response(result);  // Returns Result<YourEntityResult>, mapped to HTTP status
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await _mediator.SendQuery(new GetYourEntityByIdQuery(id));
+        return Response(result);  // 200 OK with data, or 404 Not Found
     }
 }
 ```
@@ -459,22 +469,56 @@ public class YourEntityController : CoreController
 
 ## Key Patterns & Conventions
 
+### Contracts Architecture
+
+The application uses a layered contracts approach:
+
+- **Domain Contracts** (`Domain/Contracts/Common/`) - Core `Result<T>`, `Error`, and business contracts
+- **API Contracts** (`Domain/Contracts/API/`) - HTTP response contracts (`ErrorResponseDto`, `PaginatedResponseDto`, etc.)
+- **Result DTOs** (`Services/Contracts/Results/`) - Application-level result objects (e.g., `ProductResult`, `ProfileResult`)
+
 ### Result Pattern
 
-All handlers return `Result<T>` for consistent error handling:
+All handlers return `Result<T>` (from `Domain.Contracts.Common`) for consistent error handling:
 
 ```csharp
-// Success
-return Result<StatusDto>.Success(statusDto);
+// Success - returns result DTO, not entity
+return Result<ProductResult>.Success(ProductResult.FromEntity(product));
 
-// Validation failure
-return Result<StatusDto>.ValidationFailure(errors);
+// Validation failure with typed errors
+return Result<ProductResult>.ValidationFailure(new Error("Name", "Name is required", ErrorTypes.Validation));
 
 // Not found
-return Result<StatusDto>.NotFound("Entity not found");
+return Result<ProductResult>.NotFound("Product not found");
 
 // Unauthorized
-return Result<StatusDto>.Unauthorized("Authentication required");
+return Result<ProductResult>.Unauthorized("Authentication required");
+
+// Database error
+return Result<ProductResult>.Failure("Database error", ErrorTypes.Database);
+```
+
+### Entity Self-Validation
+
+Entities implement `IValidatableObject` to validate their own required properties:
+
+```csharp
+public class Product : EntityBase<Guid>, IValidatableObject
+{
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        var localizer = validationContext.GetService<IStringLocalizer<Messages>>();
+
+        if (string.IsNullOrWhiteSpace(Name))
+            yield return new ValidationResult(localizer["RequiredField", nameof(Name)], [nameof(Name)]);
+
+        if (Price <= 0)
+            yield return new ValidationResult(localizer["InvalidValue", nameof(Price)], [nameof(Price)]);
+    }
+}
 ```
 
 ### Domain Events
@@ -483,21 +527,24 @@ Entities can raise domain events automatically:
 
 ```csharp
 // Events are automatically raised by AppDbContext on SaveChangesAsync
-// Listen to events by implementing INotificationHandler<EntityInsertedEvent<Status>>
+// Listen to events by implementing INotificationHandler<EntityInsertedEvent<Product>>
 ```
 
-### Validation
+### Command Validation
 
-Use FluentValidation for all commands:
+Use FluentValidation for command-level validation (complements entity validation):
 
 ```csharp
-public class CreateStatusCommandValidator : AbstractValidator<CreateStatusCommand>
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
-    public CreateStatusCommandValidator()
+    public CreateProductCommandValidator(IStringLocalizer<Messages> localizer)
     {
-        RuleFor(x => x.Nome)
-            .NotEmpty().WithMessage("Name is required")
-            .MaximumLength(100).WithMessage("Name must not exceed 100 characters");
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage(localizer["RequiredField", "Name"])
+            .MaximumLength(100).WithMessage(localizer["MaxLength", "Name", 100]);
+
+        RuleFor(x => x.Price)
+            .GreaterThan(0).WithMessage(localizer["InvalidValue", "Price"]);
     }
 }
 ```

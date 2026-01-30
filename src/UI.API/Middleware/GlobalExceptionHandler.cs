@@ -1,4 +1,4 @@
-using Domain.DTO.Infrastructure.API;
+using Domain.Contracts.API;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace UI.API.Middleware

@@ -1,11 +1,11 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using MediatR;
 using System.Collections.Generic;
 
 namespace Services.Features.Product.Queries.GetAllProducts
 {
-    public class GetAllProductsQuery : IRequest<Result<IEnumerable<ProductDto>>>
+    public class GetAllProductsQuery : IRequest<Result<IEnumerable<ProductResult>>>
     {
     }
 }

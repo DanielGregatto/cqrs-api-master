@@ -1,5 +1,5 @@
-using Domain.DTO.Infrastructure.API;
-using Domain.DTO.Responses;
+using Domain.Contracts.API;
+using Services.Contracts.Results;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +32,10 @@ namespace UI.API.Controllers
         /// <remarks>This endpoint returns a collection of products. Access may be restricted based on
         /// user permissions.</remarks>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with a list of <see
-        /// cref="ProductDto"/> objects if successful; otherwise, an <see cref="ErrorResponseDto"/> describing the
+        /// cref="ProductResult"/> objects if successful; otherwise, an <see cref="ErrorResponseDto"/> describing the
         /// error.</returns>
         [HttpGet("v1/products")]
-        [ProducesResponseType(typeof(SuccessResponse<IEnumerable<ProductDto>>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<IEnumerable<ProductResult>>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
@@ -65,7 +65,7 @@ namespace UI.API.Controllers
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{ProductDto}"/> with the product
         /// details if found; otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
         [HttpGet("v1/products/{id}")]
-        [ProducesResponseType(typeof(SuccessResponse<ProductDto>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<ProductResult>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
@@ -100,7 +100,7 @@ namespace UI.API.Controllers
         /// cref="PaginatedResponseDto{ProductDto}"/> of products if successful; otherwise, an <see
         /// cref="ErrorResponseDto"/> describing the error.</returns>
         [HttpGet("v1/products/search")]
-        [ProducesResponseType(typeof(SuccessResponse<PaginatedResponseDto<ProductDto>>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<PaginatedResponseDto<ProductResult>>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
@@ -143,7 +143,7 @@ namespace UI.API.Controllers
         /// fails or the user is unauthorized.</returns>
         [HttpPost("v1/products")]
         [Authorize]
-        [ProducesResponseType(typeof(SuccessResponse<ProductDto>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<ProductResult>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
         public async Task<IActionResult> Create([FromForm] CreateProductCommand command)
@@ -173,7 +173,7 @@ namespace UI.API.Controllers
         /// product details if successful; otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
         [HttpPut("v1/products/{id}")]
         [Authorize]
-        [ProducesResponseType(typeof(SuccessResponse<ProductDto>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<ProductResult>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 403)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]

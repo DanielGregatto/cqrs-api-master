@@ -1,6 +1,6 @@
 using Data.Context;
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using Domain.Enums;
 using Domain.Interfaces;
 using FluentValidation;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Product.Commands.UpdateProduct
 {
     public class UpdateProductCommandHandler : BaseCommandHandler,
-        IRequestHandler<UpdateProductCommand, Result<ProductDto>>
+        IRequestHandler<UpdateProductCommand, Result<ProductResult>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<UpdateProductCommand> _validator;
@@ -33,9 +33,9 @@ namespace Services.Features.Product.Commands.UpdateProduct
             _localizer = localizer;
         }
 
-        public async Task<Result<ProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProductResult>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var validationError = await ValidateAsync<UpdateProductCommand, ProductDto>(_validator, request, cancellationToken);
+            var validationError = await ValidateAsync<UpdateProductCommand, ProductResult>(_validator, request, cancellationToken);
             if (validationError != null)
                 return validationError;
 
@@ -43,7 +43,7 @@ namespace Services.Features.Product.Commands.UpdateProduct
                 .FirstOrDefaultAsync(x => x.Id == request.Id && !x.Deleted, cancellationToken);
 
             if (product == null)
-                return Result<ProductDto>.NotFound(_localizer["Product_NotFound"]);
+                return Result<ProductResult>.NotFound(_localizer["Product_NotFound"]);
 
             // TODO: Implement Azure Blob Storage service to upload request.Image and get the stored filename
             if (request.Image != null && request.Image.Length > 0)
@@ -63,9 +63,9 @@ namespace Services.Features.Product.Commands.UpdateProduct
 
             var saved = await _unitOfWork.CommitAsync(cancellationToken);
             if (saved == 0)
-                return Result<ProductDto>.Failure(_localizer["Product_UpdateError"], ErrorTypes.Database);
+                return Result<ProductResult>.Failure(_localizer["Product_UpdateError"], ErrorTypes.Database);
 
-            return Result<ProductDto>.Success(ProductDto.FromEntity(product));
+            return Result<ProductResult>.Success(ProductResult.FromEntity(product));
         }
     }
 }

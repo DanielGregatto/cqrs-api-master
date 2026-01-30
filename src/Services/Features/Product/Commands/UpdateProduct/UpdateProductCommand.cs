@@ -1,12 +1,12 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 
 namespace Services.Features.Product.Commands.UpdateProduct
 {
-    public class UpdateProductCommand : IRequest<Result<ProductDto>>
+    public class UpdateProductCommand : IRequest<Result<ProductResult>>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

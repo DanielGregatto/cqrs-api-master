@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Domain.DTO.Infrastructure.API
+namespace Domain.Contracts.API
 {
     public class PaginatedResponseDto<T> where T : class
     {

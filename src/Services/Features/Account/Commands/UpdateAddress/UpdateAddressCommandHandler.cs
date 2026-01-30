@@ -1,5 +1,5 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using Domain.Enums;
 using Domain.Interfaces;
 using FluentValidation;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Account.Commands.UpdateAddress
 {
     public class UpdateAddressCommandHandler : BaseCommandHandler,
-        IRequestHandler<UpdateAddressCommand, Result<ProfileDto>>
+        IRequestHandler<UpdateAddressCommand, Result<ProfileResult>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UpdateAddressCommandHandler> _logger;
@@ -39,17 +39,17 @@ namespace Services.Features.Account.Commands.UpdateAddress
             _localizer = localizer;
         }
 
-        public async Task<Result<ProfileDto>> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProfileResult>> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
         {
             // Explicit validation using helper
-            var validationError = await ValidateAsync<UpdateAddressCommand, ProfileDto>(_validator, request, cancellationToken);
+            var validationError = await ValidateAsync<UpdateAddressCommand, ProfileResult>(_validator, request, cancellationToken);
             if (validationError != null)
                 return validationError;
 
             var user = await _userManager.FindByIdAsync(UserID.ToString());
 
             if (user == null)
-                return Result<ProfileDto>.NotFound(_localizer["Account_UserNotFound"]);
+                return Result<ProfileResult>.NotFound(_localizer["Account_UserNotFound"]);
 
             // Update user address properties
             user.ZipCode = request.Cep;
@@ -67,10 +67,10 @@ namespace Services.Features.Account.Commands.UpdateAddress
             {
                 _logger.LogError("Failed to update user address for user {UserId}", UserID);
                 var errors = result.Errors.Select(e => new Error(e.Description, ErrorTypes.Database)).ToArray();
-                return Result<ProfileDto>.ValidationFailure(errors);
+                return Result<ProfileResult>.ValidationFailure(errors);
             }
 
-            var profile = new ProfileDto
+            var profile = new ProfileResult
             {
                 Id = UserID,
                 Email = user.Email ?? "",
@@ -88,7 +88,7 @@ namespace Services.Features.Account.Commands.UpdateAddress
                 Country = user.Country
             };
 
-            return Result<ProfileDto>.Success(profile);
+            return Result<ProfileResult>.Success(profile);
         }
     }
 }
