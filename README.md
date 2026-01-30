@@ -1,5 +1,6 @@
 # CQRS API Boilerplate with Identity
 
+[![Build and Test](https://github.com/DanielGregatto/cqrs-api-master/actions/workflows/dotnet.yml/badge.svg)](https://github.com/DanielGregatto/cqrs-api-master/actions/workflows/dotnet.yml)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-purple)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/DanielGregatto/cqrs-api-master/pulls)
