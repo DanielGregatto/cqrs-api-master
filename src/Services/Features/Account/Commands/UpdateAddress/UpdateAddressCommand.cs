@@ -1,10 +1,10 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using MediatR;
 
 namespace Services.Features.Account.Commands.UpdateAddress
 {
-    public class UpdateAddressCommand : IRequest<Result<ProfileDto>>
+    public class UpdateAddressCommand : IRequest<Result<ProfileResult>>
     {
         public string Cep { get; set; }
         public string Street { get; set; }

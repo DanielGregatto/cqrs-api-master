@@ -1,11 +1,11 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using MediatR;
 using System;
 
 namespace Services.Features.Product.Queries.GetProductById
 {
-    public class GetProductByIdQuery : IRequest<Result<ProductDto>>
+    public class GetProductByIdQuery : IRequest<Result<ProductResult>>
     {
         public Guid Id { get; set; }
 

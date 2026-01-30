@@ -1,5 +1,5 @@
-using Domain.DTO.Infrastructure.API;
-using Domain.DTO.Responses;
+using Domain.Contracts.API;
+using Services.Contracts.Results;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +33,7 @@ namespace UI.API.Controllers
         /// found; otherwise, an <see cref="ErrorResponseDto"/> indicating the error.</returns>
         [Authorize]
         [HttpGet("v1/account/profile")]
-        [ProducesResponseType(typeof(SuccessResponse<ProfileDto>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<ProfileResult>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
         public async Task<IActionResult> Profile()
@@ -63,7 +63,7 @@ namespace UI.API.Controllers
         /// otherwise, an <see cref="ErrorResponseDto"/> describing the error.</returns>
         [Authorize]
         [HttpPost("v1/account/update-personal-info")]
-        [ProducesResponseType(typeof(SuccessResponse<ProfileDto>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<ProfileResult>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
         public async Task<IActionResult> UpdatePersonalInfo([FromBody] UpdatePersonalInfoCommand command)
@@ -90,11 +90,11 @@ namespace UI.API.Controllers
         /// returned.</remarks>
         /// <param name="command">The command containing the new address details to be applied to the user's profile.</param>
         /// <returns>An <see cref="IActionResult"/> containing a <see cref="SuccessResponse{T}"/> with the updated <see
-        /// cref="ProfileDto"/> if the operation succeeds; otherwise, an <see cref="ErrorResponseDto"/> describing the
+        /// cref="ProfileResult"/> if the operation succeeds; otherwise, an <see cref="ErrorResponseDto"/> describing the
         /// error.</returns>
         [Authorize]
         [HttpPost("v1/account/update-address")]
-        [ProducesResponseType(typeof(SuccessResponse<ProfileDto>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<ProfileResult>), 200)]
         [ProducesResponseType(typeof(ErrorResponseDto), 401)]
         [ProducesResponseType(typeof(ErrorResponseDto), 404)]
         public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressCommand command)

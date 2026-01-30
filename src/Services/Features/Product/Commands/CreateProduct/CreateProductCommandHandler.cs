@@ -1,12 +1,12 @@
 using Data.Context;
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
 using Domain.Enums;
 using Domain.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Services.Contracts.Results;
 using Services.Core;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Product.Commands.CreateProduct
 {
     public class CreateProductCommandHandler : BaseCommandHandler,
-        IRequestHandler<CreateProductCommand, Result<ProductDto>>
+        IRequestHandler<CreateProductCommand, Result<ProductResult>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<CreateProductCommand> _validator;
@@ -36,12 +36,12 @@ namespace Services.Features.Product.Commands.CreateProduct
             _localizer = localizer;
         }
 
-        public async Task<Result<ProductDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProductResult>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Executing CreateProductCommand for product: {ProductName}, Slug: {Slug}",
                 request.Name, request.Slug);
 
-            var validationError = await ValidateAsync<CreateProductCommand, ProductDto>(_validator, request, cancellationToken);
+            var validationError = await ValidateAsync<CreateProductCommand, ProductResult>(_validator, request, cancellationToken);
             if (validationError != null)
             {
                 _logger.LogWarning("Validation failed for CreateProductCommand. Product: {ProductName}",
@@ -75,13 +75,13 @@ namespace Services.Features.Product.Commands.CreateProduct
             {
                 _logger.LogError("Failed to save product to database. Product: {ProductName}",
                     request.Name);
-                return Result<ProductDto>.Failure(_localizer["DatabaseError"], ErrorTypes.Database);
+                return Result<ProductResult>.Failure(_localizer["DatabaseError"], ErrorTypes.Database);
             }
 
             _logger.LogInformation("Successfully created product {ProductId} with name: {ProductName}",
                 product.Id, product.Name);
 
-            return Result<ProductDto>.Success(ProductDto.FromEntity(product));
+            return Result<ProductResult>.Success(ProductResult.FromEntity(product));
         }
     }
 }

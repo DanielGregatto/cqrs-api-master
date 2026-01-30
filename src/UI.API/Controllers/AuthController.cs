@@ -1,4 +1,5 @@
-using Domain.DTO.Infrastructure.API;
+using Domain.Contracts.API;
+using Domain.Contracts.Common;
 using Domain.Enums;
 using Domain.Interfaces;
 using Identity.Model;
@@ -308,7 +309,7 @@ namespace UI.API.Controllers
             if (remoteError != null)
             {
                 _logger.LogWarning("External login error from {Provider}: {Error}", provider, remoteError);
-                var errorResult = Domain.DTO.Infrastructure.CQRS.Result<string>.Failure(
+                var errorResult = Result<string>.Failure(
                     $"Erro externo: {remoteError}",
                     ErrorTypes.Validation);
                 return Response(errorResult);

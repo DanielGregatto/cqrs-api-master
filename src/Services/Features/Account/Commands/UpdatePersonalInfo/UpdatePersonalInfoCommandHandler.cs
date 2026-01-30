@@ -1,5 +1,5 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using Domain.Enums;
 using Domain.Interfaces;
 using FluentValidation;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Account.Commands.UpdatePersonalInfo
 {
     public class UpdatePersonalInfoCommandHandler : BaseCommandHandler,
-        IRequestHandler<UpdatePersonalInfoCommand, Result<ProfileDto>>
+        IRequestHandler<UpdatePersonalInfoCommand, Result<ProfileResult>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UpdatePersonalInfoCommandHandler> _logger;
@@ -39,17 +39,17 @@ namespace Services.Features.Account.Commands.UpdatePersonalInfo
             _localizer = localizer;
         }
 
-        public async Task<Result<ProfileDto>> Handle(UpdatePersonalInfoCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ProfileResult>> Handle(UpdatePersonalInfoCommand request, CancellationToken cancellationToken)
         {
             // Explicit validation using helper
-            var validationError = await ValidateAsync<UpdatePersonalInfoCommand, ProfileDto>(_validator, request, cancellationToken);
+            var validationError = await ValidateAsync<UpdatePersonalInfoCommand, ProfileResult>(_validator, request, cancellationToken);
             if (validationError != null)
                 return validationError;
 
             var user = await _userManager.FindByIdAsync(UserID.ToString());
 
             if (user == null)
-                return Result<ProfileDto>.NotFound(_localizer["Account_UserNotFound"]);
+                return Result<ProfileResult>.NotFound(_localizer["Account_UserNotFound"]);
 
             // Update user properties
             user.FullName = request.FullName;
@@ -64,10 +64,10 @@ namespace Services.Features.Account.Commands.UpdatePersonalInfo
             {
                 _logger.LogError("Failed to update user personal info for user {UserId}", UserID);
                 var errors = result.Errors.Select(e => new Error(e.Description, ErrorTypes.Database)).ToArray();
-                return Result<ProfileDto>.ValidationFailure(errors);
+                return Result<ProfileResult>.ValidationFailure(errors);
             }
 
-            var profile = new ProfileDto
+            var profile = new ProfileResult
             {
                 Id = UserID,
                 Email = user.Email ?? "",
@@ -85,7 +85,7 @@ namespace Services.Features.Account.Commands.UpdatePersonalInfo
                 Country = user.Country
             };
 
-            return Result<ProfileDto>.Success(profile);
+            return Result<ProfileResult>.Success(profile);
         }
     }
 }

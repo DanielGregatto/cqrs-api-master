@@ -2,7 +2,7 @@ using Domain.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Domain.DTO.Infrastructure.CQRS
+namespace Domain.Contracts.Common
 {
     /// <summary>
     /// Represents the result of an operation that returns data

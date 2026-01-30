@@ -1,6 +1,6 @@
 using Data.Context;
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Responses;
+using Domain.Contracts.Common;
+using Services.Contracts.Results;
 using Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Services.Features.Product.Queries.GetProductById
 {
     public class GetProductByIdQueryHandler : BaseQueryHandler,
-        IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
+        IRequestHandler<GetProductByIdQuery, Result<ProductResult>>
     {
         private readonly ILogger<GetProductByIdQueryHandler> _logger;
         private readonly IStringLocalizer _localizer;
@@ -30,7 +30,7 @@ namespace Services.Features.Product.Queries.GetProductById
             _localizer = localizer;
         }
 
-        public async Task<Result<ProductDto>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<ProductResult>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Querying product by ID: {ProductId}", request.Id);
 
@@ -42,13 +42,13 @@ namespace Services.Features.Product.Queries.GetProductById
             if (product == null)
             {
                 _logger.LogWarning("Product not found with ID: {ProductId}", request.Id);
-                return Result<ProductDto>.NotFound(_localizer["NotFound"]);
+                return Result<ProductResult>.NotFound(_localizer["NotFound"]);
             }
 
             _logger.LogInformation("Successfully retrieved product {ProductId} with name: {ProductName}",
                 product.Id, product.Name);
 
-            return Result<ProductDto>.Success(ProductDto.FromEntity(product));
+            return Result<ProductResult>.Success(ProductResult.FromEntity(product));
         }
     }
 }

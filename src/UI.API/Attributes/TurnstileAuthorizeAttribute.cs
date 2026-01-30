@@ -1,5 +1,5 @@
 ﻿using Domain.Configs;
-using Domain.DTO.Infrastructure.API;
+using Domain.Contracts.API;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;

@@ -1,4 +1,4 @@
-using Domain.DTO.Infrastructure.CQRS;
+using Domain.Contracts.Common;
 using MediatR;
 
 namespace Services.Features.Account.Commands.UpdatePassword

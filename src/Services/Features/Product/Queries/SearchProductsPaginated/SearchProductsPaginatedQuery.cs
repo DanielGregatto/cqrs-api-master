@@ -1,13 +1,13 @@
-using Domain.DTO.Infrastructure.CQRS;
-using Domain.DTO.Infrastructure.API;
-using Domain.DTO.Responses;
+using Services.Contracts.Results;
 using MediatR;
 using System;
 using System.Linq.Expressions;
+using Domain.Contracts.API;
+using Domain.Contracts.Common;
 
 namespace Services.Features.Product.Queries.SearchProductsPaginated
 {
-    public class SearchProductsPaginatedQuery : IRequest<Result<PaginatedResponseDto<ProductDto>>>
+    public class SearchProductsPaginatedQuery : IRequest<Result<PaginatedResponseDto<ProductResult>>>
     {
         public int PageIndex { get; set; } = 1;
         public int PageSize { get; set; } = 10;

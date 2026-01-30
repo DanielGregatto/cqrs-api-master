@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Domain.DTO.Infrastructure.CQRS
+namespace Domain.Contracts.Common
 {
     public class Error
     {

@@ -1,5 +1,5 @@
 using Data.Context;
-using Domain.DTO.Infrastructure.CQRS;
+using Domain.Contracts.Common;
 using Domain.Interfaces;
 using FluentValidation;
 using System;

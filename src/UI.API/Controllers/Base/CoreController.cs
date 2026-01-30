@@ -1,5 +1,5 @@
-using Domain.DTO.Infrastructure.API;
-using Domain.DTO.Infrastructure.CQRS;
+using Domain.Contracts.API;
+using Domain.Contracts.Common;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
